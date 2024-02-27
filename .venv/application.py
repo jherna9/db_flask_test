@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
 import csv
+from cleaning_csv import clean_departments
 
 app = Flask(__name__)
 
@@ -64,6 +65,7 @@ def upload_csv():
 
 
 if __name__ == '__main__':
+    clean_departments()
     create_table_departments()
     create_table_hired_employees()
     create_table_jobs()
