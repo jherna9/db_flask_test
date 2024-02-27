@@ -33,30 +33,13 @@ def create_table_jobs():
     conn.commit()
     conn.close()
 
-
-# Function to insert batch transactions into the database
-    #departments
+#departments
 def insert_batch_departments(transactions):
     conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.executemany('INSERT INTO departments (STRING) VALUES (?)', transactions)
     conn.commit()
     conn.close()
-    #hired_employees
-def insert_batch_hired_employees(transactions):
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    c.executemany('INSERT INTO hired_employees (STRING,STRING,STRING,INTEGER,INTEGER) VALUES (?,?,?,?,?)', transactions)
-    conn.commit()
-    conn.close()
-    #hired_employees
-def insert_batch_jobs(transactions):
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    c.executemany('INSERT INTO jobs (STRING) VALUES (?)', transactions)
-    conn.commit()
-    conn.close()
-
 
 
 @app.route('/upload', methods=['POST'])
@@ -78,24 +61,7 @@ def upload_csv():
             transactions = [(row[0], int(row[1])) for row in csv_reader]
             insert_batch_departments(transactions)
         return jsonify({'message': 'File uploaded successfully'})
-    
 
-
-
-
-
-
-
-
-@app.route('/insert_batch', methods=['POST'])
-def insert_batch():
-    data = request.get_json()
-    if data:
-        transactions = [(row['date'], row['value']) for row in data['transactions']]
-        insert_batch_transactions(transactions)
-        return jsonify({'message': 'Batch transactions inserted successfully'})
-    else:
-        return jsonify({'error': 'No data provided'})
 
 if __name__ == '__main__':
     create_table_departments()
