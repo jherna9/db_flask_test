@@ -128,23 +128,28 @@ def execute_query(query):
     return data   
 
 @app.route('/get_data1', methods=['GET'])
-def get_data():
+def get_data1():
     query = """
         SELECT
-            department,
-            job,
-            SUM(CASE WHEN hire_date BETWEEN '2021-01-01' AND '2021-03-31' THEN 1 ELSE 0 END) AS Q1,
-            SUM(CASE WHEN hire_date BETWEEN '2021-04-01' AND '2021-06-30' THEN 1 ELSE 0 END) AS Q2,
-            SUM(CASE WHEN hire_date BETWEEN '2021-07-01' AND '2021-09-30' THEN 1 ELSE 0 END) AS Q3,
-            SUM(CASE WHEN hire_date BETWEEN '2021-10-01' AND '2021-12-31' THEN 1 ELSE 0 END) AS Q4
-        FROM
-            employees
-        WHERE
-            hire_date BETWEEN '2021-01-01' AND '2021-12-31'
-        GROUP BY
-            department, job
-        ORDER BY
-            department, job
+                d.department,
+                j.job,
+                SUM(CASE WHEN datetime BETWEEN '2021-01-01' AND '2021-03-31' THEN 1 ELSE 0 END) AS Q1,
+                SUM(CASE WHEN datetime BETWEEN '2021-04-01' AND '2021-06-30' THEN 1 ELSE 0 END) AS Q2,
+                SUM(CASE WHEN datetime BETWEEN '2021-07-01' AND '2021-09-30' THEN 1 ELSE 0 END) AS Q3,
+                SUM(CASE WHEN datetime BETWEEN '2021-10-01' AND '2021-12-31' THEN 1 ELSE 0 END) AS Q4
+            FROM
+                hired_employees as he
+			inner join 
+				departments as d
+				on he.department_id = d.id
+			inner join jobs as j
+				on he.job_id = j.id
+            WHERE
+                datetime BETWEEN '2021-01-01' AND '2021-12-31'
+            GROUP BY
+                d.department, j.job
+            ORDER BY
+                d.department, j.job
     """
     result = execute_query(query)
     response = {
@@ -166,7 +171,7 @@ def execute_query(query):
     return data   
 
 @app.route('/get_data2', methods=['GET'])
-def get_data():
+def get_data2():
     query = """
             SELECT 
                 d.id AS department_id,
