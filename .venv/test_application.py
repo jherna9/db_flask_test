@@ -1,35 +1,37 @@
-from application import create_table_departments 
-import requests
+from application import create_table_departments,create_table_hired_employees,create_table_jobs
 import sqlite3
-import os
-import pytest
-
 
 def test_create_table_departments():
     # Check if the table exists
-    conn = sqlite3.connect('data\data.db')
+    conn = sqlite3.connect('data/data.db')
     c = conn.cursor()
     create_table_departments()
     c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='departments'")
     result = c.fetchone()
     conn.close()
+    assert result is None
 
-    assert result is not None
+def test_create_hired_employees():
+    # Check if the table exists
+    conn = sqlite3.connect('data/data.db')
+    c = conn.cursor()
+    create_table_hired_employees()
+    c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='hired_employees'")
+    result = c.fetchone()
+    conn.close()
+    assert result is None
 
-# # Test inserting batch transactions
-# def test_insert_batch():
-#     url = 'http://127.0.0.1:5000/insert_batch'
-#     data = {
-#         'transactions': [
-#             {'date': '2024-02-25', 'value': 100},
-#             {'date': '2024-02-26', 'value': 150}
-#         ]
-#     }
-#     response = requests.post(url, json=data)
-#     assert response.status_code == 200
-#     assert response.json()['message'] == 'Batch transactions inserted successfully'
+def test_create_table_jobs():
+    # Check if the table exists
+    conn = sqlite3.connect('data/data.db')
+    c = conn.cursor()
+    create_table_jobs()
+    c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='jobs'")
+    result = c.fetchone()
+    conn.close()
+    assert result is None
 
 if __name__ == '__main__':
     test_create_table_departments()
-    #test_upload_csv()
-    #test_insert_batch()
+    test_create_hired_employees()
+    test_create_table_jobs()
